@@ -1,5 +1,7 @@
 package com.bridgeit.fundoonotes.service;
 
+import java.util.Optional;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.modelmapper.ModelMapper;
@@ -43,15 +45,41 @@ public class UserServiceImpl implements IUserService {
 		email.setTo(email.getEmail());
 		email.setSubject("verification");
 		email.setBody("body");
+		StringBuffer url;
+	System.err.println(	 url= request.getRequestURL());
+		
 		try {
 			
-			email.setBody(emailsender.getlink("http://localhost:9090/", id));
+				email.setBody(emailsender.getlink("http://localhost:9090/user/mailactivation/",status.getUserId()));
 		} catch (Exception e) {
-
+			System.out.println("error in email snding");
 		}
+		emailsender.send(email);
 		return "success";
 	}
 
+	
+	public String validateEmail(String token)
+	{
+		String id=TokenUtility.verifyToken(token);
+		Optional<User> user=repository.findById(id);
+		if(user.isPresent())
+		{
+			user.get().setVerified(true);
+			user.get().setUpdatedTime(Utility.todayDate());
+			repository.save(user.get());
+		}
+		else
+		{
+			System.out.println("error");
+		}
+		
+		
+		
+		return null;
+	}
+	
+	
 	@Override
 	public String loginUser(Dtologin dtologin) {
 

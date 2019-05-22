@@ -25,7 +25,11 @@ public class Controller {
 		return status;
 	}
 	
-	
+	public String emailactivation() {
+		
+		
+		return null;
+	}
 	
 	
 }
