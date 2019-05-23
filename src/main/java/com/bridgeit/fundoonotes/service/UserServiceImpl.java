@@ -45,12 +45,10 @@ public class UserServiceImpl implements IUserService {
 		email.setTo(email.getEmail());
 		email.setSubject("verification");
 		email.setBody("body");
-		StringBuffer url;
-	System.err.println(	 url= request.getRequestURL());
-		
+
 		try {
-			
-				email.setBody(emailsender.getlink("http://localhost:9090/user/mailactivation/",status.getUserId()));
+
+			email.setBody(emailsender.getlink("http://localhost:9090/user/mailactivation/", status.getUserId()));
 		} catch (Exception e) {
 			System.out.println("error in email snding");
 		}
@@ -58,32 +56,48 @@ public class UserServiceImpl implements IUserService {
 		return "success";
 	}
 
-	
-	public String validateEmail(String token)
-	{
-		String id=TokenUtility.verifyToken(token);
-		Optional<User> user=repository.findById(id);
-		if(user.isPresent())
-		{
+		// to validate the isverified field
+	public String validateEmail(String token) {
+		String id = TokenUtility.verifyToken(token);
+		Optional<User> user = repository.findById(id);
+		if (user.isPresent()) {
 			user.get().setVerified(true);
 			user.get().setUpdatedTime(Utility.todayDate());
 			repository.save(user.get());
-		}
-		else
-		{
+		} else {
 			System.out.println("error");
 		}
-		
-		
-		
-		return null;
-	}
-	
-	
-	@Override
-	public String loginUser(Dtologin dtologin) {
 
 		return null;
+	}
+
+	@Override
+	public String loginUser(Dtologin dtologin) {
+		
+		
+
+		boolean isEmailPresent=repository.findUserByEmail(dtologin.getEmail()).isPresent();
+		if(!isEmailPresent)
+		{
+			
+			return "invalid email";
+		}
+		User user=repository.findUserByEmail(dtologin.getEmail()).get();
+		if(user.getisVerified()==false)
+		{
+			System.err.println("email not verified executing");
+			return "email not verified";
+		}
+		boolean verifyPassword=passwordEncryptUtility.isPassword(dtologin, user);
+		if(!verifyPassword)
+		{
+			
+			return "invalid password";
+		}
+		user.setUpdatedTime(Utility.todayDate());
+		repository.save(user);
+		
+		return "success";
 	}
 
 }

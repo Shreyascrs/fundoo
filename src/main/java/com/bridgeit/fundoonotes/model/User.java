@@ -85,7 +85,7 @@ public class User {
 		this.token = token;
 	}
 
-	public boolean isVerified() {
+	public boolean getisVerified() {
 		return isVerified;
 	}
 
