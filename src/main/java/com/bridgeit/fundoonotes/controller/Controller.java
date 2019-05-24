@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bridgeit.fundoonotes.dto.DtoforgetPassword;
 import com.bridgeit.fundoonotes.dto.Dtologin;
 import com.bridgeit.fundoonotes.dto.Dtouser;
 import com.bridgeit.fundoonotes.service.UserServiceImpl;
@@ -38,5 +39,19 @@ public class Controller {
 	{
 		userServiceImpl.loginUser(dtologin);
 		return "success";
+	}
+	
+	@PostMapping("/forgetpassword")
+	public String forgetPassword(@RequestBody Dtologin dtologin)
+	{
+		String res=userServiceImpl.forgetPassword(dtologin);
+		return res;
+	}
+	
+	@GetMapping("/resetpassword/{token}")
+	public String resetpassword(@PathVariable String token,@RequestBody DtoforgetPassword dtoforgetPassword )
+	{
+		String res=userServiceImpl.resetPassword(token, dtoforgetPassword);
+		return res;
 	}
 }

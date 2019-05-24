@@ -1,5 +1,6 @@
 package com.bridgeit.fundoonotes.service;
 
+import java.security.cert.PKIXRevocationChecker.Option;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bridgeit.fundoonotes.dto.DtoforgetPassword;
 import com.bridgeit.fundoonotes.dto.Dtologin;
 import com.bridgeit.fundoonotes.dto.Dtouser;
 import com.bridgeit.fundoonotes.model.Email;
@@ -100,4 +102,48 @@ public class UserServiceImpl implements IUserService {
 		return "success";
 	}
 
+	@Override
+	public String forgetPassword(Dtologin dtologin) {
+		Email email=new Email();
+		Optional<User> user=repository.findUserByEmail(dtologin.getEmail());
+		if(user.isPresent())
+		{
+			User use=user.get();
+			email.setEmail("fundooapp6@gmail.com");
+			email.setTo(dtologin.getEmail());
+			email.setSubject("reset password link");
+			try {
+				email.setBody(emailsender.getlink("http://localhost:9090/user/resetpassword/",use.getUserId()));
+			}
+			catch(Exception e)
+			{
+				System.out.println("error in sending the link");
+			}
+			emailsender.send(email);
+			return "resetlink sent successfull in forget password";
+		}else
+		{
+			return "user not exist";
+		}
+		
+	}
+
+	public String resetPassword(String token,DtoforgetPassword dtoforgetPassword) {
+		
+		String id=TokenUtility.verifyToken(token);
+		Optional<User> user=repository.findUserById(id);
+		if(user.isPresent())
+		{
+			System.err.println(dtoforgetPassword.getPassword());
+			user.get().setPassword(passwordEncryptUtility.encryptPassword(dtoforgetPassword.getPassword()));
+			user.get().setUpdatedTime(Utility.todayDate());
+			repository.save(user.get());
+			return "password changed success in resetpassword";
+		}
+		else {
+			return "passowrd not hanged user not found";
+	}
+	
+	
+	}
 }
