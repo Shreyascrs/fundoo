@@ -1,19 +1,26 @@
 package com.bridgeit.fundoonotes.service;
 
-import java.security.cert.PKIXRevocationChecker.Option;
+import java.util.List;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.bridgeit.fundoonotes.dto.DtoforgetPassword;
 import com.bridgeit.fundoonotes.dto.Dtologin;
+import com.bridgeit.fundoonotes.dto.Dtonote;
 import com.bridgeit.fundoonotes.dto.Dtouser;
 import com.bridgeit.fundoonotes.model.Email;
+import com.bridgeit.fundoonotes.model.Note;
 import com.bridgeit.fundoonotes.model.User;
+import com.bridgeit.fundoonotes.repository.INoteRepository;
 import com.bridgeit.fundoonotes.repository.IRepository;
 import com.bridgeit.fundoonotes.utility.PasswordEncryptUtility;
 import com.bridgeit.fundoonotes.utility.TokenUtility;
@@ -21,15 +28,17 @@ import com.bridgeit.fundoonotes.utility.Utility;
 import com.bridgeit.fundoonotes.utility.UtilityMail;
 
 @Service
-public class UserServiceImpl implements IUserService {
+public class UserServiceImpl implements IUserService{
 
-	ModelMapper mapper = new ModelMapper();
+	@Autowired
+	private ModelMapper mapper;
 	@Autowired
 	private IRepository repository;
 	@Autowired
 	UtilityMail emailsender;
 	@Autowired
 	private PasswordEncryptUtility passwordEncryptUtility;
+	
 
 	public String registerUser(Dtouser dtouser, HttpServletRequest request) {
 
@@ -131,7 +140,7 @@ public class UserServiceImpl implements IUserService {
 	public String resetPassword(String token,DtoforgetPassword dtoforgetPassword) {
 		
 		String id=TokenUtility.verifyToken(token);
-		Optional<User> user=repository.findUserById(id);
+		Optional<User> user=repository.findById(id);
 		if(user.isPresent())
 		{
 			System.err.println(dtoforgetPassword.getPassword());
@@ -146,4 +155,6 @@ public class UserServiceImpl implements IUserService {
 	
 	
 	}
+	
+
 }

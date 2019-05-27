@@ -1,7 +1,8 @@
 package com.bridgeit.fundoonotes.model;
 
-import javax.validation.constraints.NotNull;
+import java.util.List;
 
+import javax.validation.constraints.NotNull;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -20,6 +21,15 @@ public class User {
 	private boolean isVerified;
 	@NotNull
 	private String token;
+	private List<Note> notes;
+
+	public List<Note> getNotes() {
+		return notes;
+	}
+
+	public void setNotes(List<Note> notes) {
+		this.notes = notes;
+	}
 
 	public String getUserId() {
 		return id;

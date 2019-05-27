@@ -11,7 +11,6 @@ import com.bridgeit.fundoonotes.model.Note;
 @Repository
 public interface INoteRepository extends MongoRepository<Note, String>{
 	
-	Optional<Note> findByUseridAndNoteid(String noteid,String userid);
-	List<Note> findUserById(String userid);
-
+	Optional<Note> findByNoteidAndUserid(String noteId,String userId);
+	List<Note> findByUserid(String userid);
 }

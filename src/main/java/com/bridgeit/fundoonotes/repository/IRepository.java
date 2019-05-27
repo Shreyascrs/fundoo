@@ -9,6 +9,8 @@ import com.bridgeit.fundoonotes.model.User;
 @Repository
 public interface IRepository extends MongoRepository<User, String> {
 	Optional<User>findUserByEmail(String email);
-	Optional<User>findUserById(String id);
+	Optional<User>findById(String id);
+	
+	
 	
 }
