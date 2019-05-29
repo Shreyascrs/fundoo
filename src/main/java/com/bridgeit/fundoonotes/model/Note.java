@@ -1,6 +1,9 @@
 package com.bridgeit.fundoonotes.model;
 
+import java.util.List;
+
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
 public class Note {
 
@@ -15,7 +18,18 @@ public class Note {
 	private boolean trash;
 	private boolean isPin;
 	
+	@DBRef
+	private List<Label> labels;
 	
+	
+	public List<Label> getLabels() {
+		return labels;
+	}
+
+	public void setLabels(List<Label> labels) {
+		this.labels = labels;
+	}
+
 	public boolean isArchive() {
 		return archive;
 	}

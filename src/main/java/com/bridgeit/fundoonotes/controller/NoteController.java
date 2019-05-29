@@ -1,7 +1,5 @@
 package com.bridgeit.fundoonotes.controller;
 
-
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,37 +33,48 @@ public class NoteController {
 		String response = noteserviceimpl.updateNote(dtonote, token, noteid);
 		return response;
 	}
+
 	@PostMapping("/deletenote")
-	public String deleteNote(@RequestHeader String token,@RequestParam String noteId)
-	{
-		String responce=noteserviceimpl.deleteNote(token, noteId);
+	public String deleteNote(@RequestHeader String token, @RequestParam String noteId) {
+		String responce = noteserviceimpl.deleteNote(token, noteId);
 		return responce;
 	}
-	
+
 	@GetMapping("/readnotes")
-	public List<Dtonote> readNote(@RequestParam String token)
-	{
-		List<Dtonote> notelist=noteserviceimpl.readNotes(token);
+	public List<Dtonote> readNote(@RequestParam String token) {
+		List<Dtonote> notelist = noteserviceimpl.readNotes(token);
 		return notelist;
 	}
-	
+
 	@GetMapping("/archive")
-	public String archive(@RequestParam String noteId,@RequestHeader String token)
-	{
-		String responce=noteserviceimpl.isArchive(token, noteId);
+	public String archive(@RequestParam String noteId, @RequestHeader String token) {
+		String responce = noteserviceimpl.isArchive(token, noteId);
 		return responce;
 	}
+
 	@GetMapping("/trash")
-	public String trash(@RequestParam String noteId,@RequestHeader String token)
-	{
-		String responce=noteserviceimpl.isTrash(token, noteId);
+	public String trash(@RequestParam String noteId, @RequestHeader String token) {
+		String responce = noteserviceimpl.isTrash(token, noteId);
 		return responce;
 	}
+
 	@GetMapping("/pin")
-	public String pin(@RequestParam String noteId,@RequestHeader String token)
-	{
-		String responce=noteserviceimpl.isPin(token, noteId);
+	public String pin(@RequestParam String noteId, @RequestHeader String token) {
+		String responce = noteserviceimpl.isPin(token, noteId);
 		return responce;
 	}
-	
+
+	@PostMapping("/addlabeltonote")
+	public String addlabeltonote(@RequestParam String noteId, @RequestHeader String token,
+			@RequestParam String labelId) {
+		String responce = noteserviceimpl.addLabelToNote(noteId, token, labelId);
+		return responce;
+	}
+
+	@PostMapping("/removelabelfromnote")
+	public String removeLabelFromNote(@RequestParam String noteId, @RequestHeader String token, @RequestParam String labelId) {
+		String responce = noteserviceimpl.removeLabelFromNote(noteId, token, labelId);
+		return responce;
+	}
+
 }

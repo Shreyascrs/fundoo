@@ -11,4 +11,5 @@ public interface INoteService {
 	public String updateNote(Dtonote dtonote,String token,String noteid);
 	public String deleteNote(String token,String noteId);
 	public List<Dtonote> readNotes(String token);
+	public String addLabelToNote(String noteId,String token,String lableId);
 }
