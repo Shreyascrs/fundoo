@@ -12,8 +12,6 @@ import com.bridgeit.fundoonotes.model.Label;
 public interface ILabelRepository extends MongoRepository<Label, String>
 
 {
-	Optional<Label> findByLabelId(String noteId);
-
 	Optional<Label> findByLabelIdAndUserId(String LabelId, String userId);
 
 	List<Label> findByUserId(String userId);

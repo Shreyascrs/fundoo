@@ -1,26 +1,15 @@
 package com.bridgeit.fundoonotes.service;
 
-import java.util.List;
 import java.util.Optional;
-
 import javax.servlet.http.HttpServletRequest;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
 import com.bridgeit.fundoonotes.dto.DtoforgetPassword;
 import com.bridgeit.fundoonotes.dto.Dtologin;
-import com.bridgeit.fundoonotes.dto.Dtonote;
 import com.bridgeit.fundoonotes.dto.Dtouser;
 import com.bridgeit.fundoonotes.model.Email;
-import com.bridgeit.fundoonotes.model.Note;
 import com.bridgeit.fundoonotes.model.User;
-import com.bridgeit.fundoonotes.repository.INoteRepository;
 import com.bridgeit.fundoonotes.repository.IRepository;
 import com.bridgeit.fundoonotes.utility.PasswordEncryptUtility;
 import com.bridgeit.fundoonotes.utility.TokenUtility;
@@ -28,7 +17,7 @@ import com.bridgeit.fundoonotes.utility.Utility;
 import com.bridgeit.fundoonotes.utility.UtilityMail;
 
 @Service
-public class UserServiceImpl implements IUserService{
+public class UserServiceImpl implements IUserService {
 
 	@Autowired
 	private ModelMapper mapper;
@@ -38,7 +27,6 @@ public class UserServiceImpl implements IUserService{
 	UtilityMail emailsender;
 	@Autowired
 	private PasswordEncryptUtility passwordEncryptUtility;
-	
 
 	public String registerUser(Dtouser dtouser, HttpServletRequest request) {
 
@@ -67,7 +55,6 @@ public class UserServiceImpl implements IUserService{
 		return "success";
 	}
 
-		// to validate the isverified field
 	public String validateEmail(String token) {
 		String id = TokenUtility.verifyToken(token);
 		Optional<User> user = repository.findById(id);
@@ -84,77 +71,64 @@ public class UserServiceImpl implements IUserService{
 
 	@Override
 	public String loginUser(Dtologin dtologin) {
-		
-		
 
-		boolean isEmailPresent=repository.findUserByEmail(dtologin.getEmail()).isPresent();
-		if(!isEmailPresent)
-		{
-			
+		boolean isEmailPresent = repository.findUserByEmail(dtologin.getEmail()).isPresent();
+		if (!isEmailPresent) {
+
 			return "invalid email";
 		}
-		User user=repository.findUserByEmail(dtologin.getEmail()).get();
-		if(user.getisVerified()==false)
-		{
+		User user = repository.findUserByEmail(dtologin.getEmail()).get();
+		if (user.getisVerified() == false) {
 			System.err.println("email not verified executing");
 			return "email not verified";
 		}
-		boolean verifyPassword=passwordEncryptUtility.isPassword(dtologin, user);
-		if(!verifyPassword)
-		{
-			
+		boolean verifyPassword = passwordEncryptUtility.isPassword(dtologin, user);
+		if (!verifyPassword) {
+
 			return "invalid password";
 		}
 		user.setUpdatedTime(Utility.todayDate());
 		repository.save(user);
-		
+
 		return "success";
 	}
 
 	@Override
 	public String forgetPassword(Dtologin dtologin) {
-		Email email=new Email();
-		Optional<User> user=repository.findUserByEmail(dtologin.getEmail());
-		if(user.isPresent())
-		{
-			User use=user.get();
+		Email email = new Email();
+		Optional<User> user = repository.findUserByEmail(dtologin.getEmail());
+		if (user.isPresent()) {
+			User use = user.get();
 			email.setEmail("fundooapp6@gmail.com");
 			email.setTo(dtologin.getEmail());
 			email.setSubject("reset password link");
 			try {
-				email.setBody(emailsender.getlink("http://localhost:9090/user/resetpassword/",use.getUserId()));
-			}
-			catch(Exception e)
-			{
+				email.setBody(emailsender.getlink("http://localhost:9090/user/resetpassword/", use.getUserId()));
+			} catch (Exception e) {
 				System.out.println("error in sending the link");
 			}
 			emailsender.send(email);
 			return "resetlink sent successfull in forget password";
-		}else
-		{
+		} else {
 			return "user not exist";
 		}
-		
+
 	}
 
-	public String resetPassword(String token,DtoforgetPassword dtoforgetPassword) {
-		
-		String id=TokenUtility.verifyToken(token);
-		Optional<User> user=repository.findById(id);
-		if(user.isPresent())
-		{
+	public String resetPassword(String token, DtoforgetPassword dtoforgetPassword) {
+
+		String id = TokenUtility.verifyToken(token);
+		Optional<User> user = repository.findById(id);
+		if (user.isPresent()) {
 			System.err.println(dtoforgetPassword.getPassword());
 			user.get().setPassword(passwordEncryptUtility.encryptPassword(dtoforgetPassword.getPassword()));
 			user.get().setUpdatedTime(Utility.todayDate());
 			repository.save(user.get());
 			return "password changed success in resetpassword";
-		}
-		else {
+		} else {
 			return "passowrd not hanged user not found";
+		}
+
 	}
-	
-	
-	}
-	
 
 }

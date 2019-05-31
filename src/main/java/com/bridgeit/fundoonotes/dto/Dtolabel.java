@@ -1,5 +1,6 @@
 package com.bridgeit.fundoonotes.dto;
 
+
 public class Dtolabel {
 
 	private String labelName;
