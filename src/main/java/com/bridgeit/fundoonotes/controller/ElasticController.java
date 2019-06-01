@@ -9,16 +9,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bridgeit.fundoonotes.ElasticSearch.ElasticsearchService;
+import com.bridgeit.fundoonotes.ElasticSearch.ElasticServiceimpl;
 
 
 
 @RestController
-@RequestMapping("/elasticsearchNote")
+@RequestMapping("/elasticsearchnote")
 public class ElasticController {
 	
 	@Autowired
-	ElasticsearchService elastic;
+	ElasticServiceimpl elastic;
 	
 	@PostMapping("/createnote")
 	public String createNote(@RequestBody com.bridgeit.fundoonotes.model.Note note) throws IOException
