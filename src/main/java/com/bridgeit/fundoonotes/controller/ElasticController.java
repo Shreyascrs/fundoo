@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.bridgeit.fundoonotes.ElasticSearch.IElesticservice;
 import com.bridgeit.fundoonotes.model.Note;
@@ -46,4 +47,14 @@ public class ElasticController {
 		return elastic.readAll();
 	}
 
+	@GetMapping("/searchbytitle")
+	public List<Note> searchTitle(@RequestParam String title,@RequestParam String userid) throws IOException
+	{
+		return elastic.findByTitle(title, userid);
+	}
+	@GetMapping("/deletenote")
+	public String deletenote(@RequestParam String noteid) throws IOException
+	{
+		return elastic.delete(noteid);
+	}
 }

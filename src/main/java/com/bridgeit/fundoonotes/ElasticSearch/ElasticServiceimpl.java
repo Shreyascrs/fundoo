@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+
+import org.elasticsearch.action.delete.DeleteRequest;
+import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.index.IndexRequest;
@@ -95,13 +98,27 @@ public class ElasticServiceimpl implements IElesticservice {
 	}
 
 	@Override
-	public List<Note> findByTitle(String title) {
-		
-		SearchRequest request=new SearchRequest();
-		SearchSourceBuilder searchSourceBuilder=new SearchSourceBuilder();
-		
-		QueryBuilder queryBuilder=QueryBuilders.boolQuery().must(QueryBuilders.matchQuery(name, text))
-		return null;
+	public List<Note> findByTitle(String title, String userid) throws IOException {
+
+		QueryBuilder queryBuilder = QueryBuilders.boolQuery().must(QueryBuilders.matchQuery("title", title))
+				.filter(QueryBuilders.termsQuery("userid", userid));
+		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+		searchSourceBuilder.query(queryBuilder);
+		SearchRequest searchRequest = new SearchRequest();
+		searchRequest.source(searchSourceBuilder);
+		SearchResponse response = null;
+
+		response = client.search(searchRequest, RequestOptions.DEFAULT);
+
+		return getSearchResult(response);
+	}
+
+	@Override
+	public String delete(String noteid) throws IOException {
+
+		DeleteRequest deleteRequest = new DeleteRequest(INDEX, TYPE, noteid);
+		DeleteResponse deleteResponse = client.delete(deleteRequest, RequestOptions.DEFAULT);
+		return "deleted";
 	}
 
 }

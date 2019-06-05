@@ -11,5 +11,6 @@ public interface IElesticservice {
 	public Note findById(String id) throws IOException;
 	public String updateNote(Note note) throws IOException;
 	public List<Note> readAll() throws IOException;
-	public  List<Note> findByTitle(String title);
+	public String delete(String noteid) throws IOException;
+	public  List<Note> findByTitle(String title,String userid) throws IOException;
 }
