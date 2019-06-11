@@ -8,6 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.bridgeit.fundoonotes.Response.Response;
 import com.bridgeit.fundoonotes.dto.Dtolabel;
 import com.bridgeit.fundoonotes.model.Label;
 import com.bridgeit.fundoonotes.model.User;
@@ -24,9 +25,11 @@ public class LabelServiceimpl implements ILabelService {
 	private ModelMapper mapper;
 	@Autowired
 	private ILabelRepository labelrepository;
+	@Autowired
+	private Response response;
 
 	@Override
-	public String createLabel(String token, Dtolabel dtolabel) {
+	public Response createLabel(String token, Dtolabel dtolabel) {
 		String userId = TokenUtility.verifyToken(token);
 		Optional<User> user = repository.findById(userId);
 		if (user.isPresent()) {
@@ -34,36 +37,36 @@ public class LabelServiceimpl implements ILabelService {
 			Label label = mapper.map(dtolabel, Label.class);
 			label.setUserid(isuser.getUserId());
 			labelrepository.save(label);
-			return "label saved successfully";
+			return response.sendresponse(200, "label created successfully", "");
 		} else {
-			return "user not exist";
+			return response.sendresponse(204, "error in creating the label", "");
 		}
 	}
 
 	@Override
-	public String updateLabel(Dtolabel dtolabel, String labelId, String token) {
+	public Response updateLabel(Dtolabel dtolabel, String labelId, String token) {
 
 		String userId = TokenUtility.verifyToken(token);
 		Optional<Label> label = labelrepository.findByLabelIdAndUserId(labelId, userId);
 		if (label.isPresent()) {
 			label.get().setLabelName(dtolabel.getLabelName());
 			labelrepository.save(label.get());
-			return "label updated";
+			return response.sendresponse(200, "label updated", "");
 		} else {
-			return "label not present";
+			return response.sendresponse(204, "label not updated", "");
 		}
 
 	}
 
 	@Override
-	public String deleteLabel(String token, String labelId) {
+	public Response deleteLabel(String token, String labelId) {
 		String userId = TokenUtility.verifyToken(token);
 		Optional<Label> label = labelrepository.findByLabelIdAndUserId(labelId, userId);
 		if (label.isPresent()) {
 			labelrepository.delete(label.get());
-			return "label deleted";
+			return response.sendresponse(200, "label deleted", "");
 		} else {
-			return "label not found";
+			return response.sendresponse(204, "label not deleted", "");
 		}
 
 	}

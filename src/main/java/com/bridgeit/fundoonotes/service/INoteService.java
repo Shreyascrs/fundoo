@@ -1,16 +1,22 @@
 package com.bridgeit.fundoonotes.service;
 
+import java.io.IOException;
 import java.util.List;
 
+import com.bridgeit.fundoonotes.Response.Response;
 import com.bridgeit.fundoonotes.dto.Dtonote;
-import com.bridgeit.fundoonotes.model.Note;
 
 public interface INoteService {
 
-	public String createNote(Dtonote dtonote,String token);
-	public String updateNote(Dtonote dtonote,String token,String noteid);
-	public String deleteNote(String token,String noteId);
+	public Response createNote(Dtonote dtonote, String token);
+
+	public Response updateNote(Dtonote dtonote, String token, String noteid);
+
+	public Response deleteNote(String token, String noteId);
+
 	public List<Dtonote> readNotes(String token);
-	public String addLabelToNote(String noteId,String token,String lableId);
-	public String removeLabelFromNote(String noteId,String token,String labelId);
+
+	public Response addLabelToNote(String noteId, String token, String lableId);
+
+	public Response removeLabelFromNote(String noteId, String token, String labelId);
 }

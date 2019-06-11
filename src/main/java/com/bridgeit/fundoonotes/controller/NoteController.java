@@ -1,5 +1,6 @@
 package com.bridgeit.fundoonotes.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bridgeit.fundoonotes.Response.Response;
 import com.bridgeit.fundoonotes.dto.Dtonote;
 import com.bridgeit.fundoonotes.service.Noteserviceimpl;
 
@@ -22,59 +24,59 @@ public class NoteController {
 	Noteserviceimpl noteserviceimpl;
 
 	@PostMapping("/createnote")
-	public String createNote(@RequestBody Dtonote dtonote, @RequestHeader String token) {
-		String response = noteserviceimpl.createNote(dtonote, token);
+	public Response createNote(@RequestBody Dtonote dtonote, @RequestHeader String token) throws IOException {
+		Response response = noteserviceimpl.createNote(dtonote, token);
 		return response;
 	}
 
 	@PostMapping("/updatenote")
-	public String updateNote(@RequestBody Dtonote dtonote, @RequestHeader String token,
-			@RequestParam(value = "noteid") String noteid) {
-		String response = noteserviceimpl.updateNote(dtonote, token, noteid);
+	public Response updateNote(@RequestBody Dtonote dtonote, @RequestHeader String token,
+			@RequestParam(value = "noteid") String noteid) throws IOException {
+		Response response = noteserviceimpl.updateNote(dtonote, token, noteid);
 		return response;
 	}
 
 	@PostMapping("/deletenote")
-	public String deleteNote(@RequestHeader String token, @RequestParam String noteId) {
-		String responce = noteserviceimpl.deleteNote(token, noteId);
-		return responce;
+	public Response deleteNote(@RequestHeader String token, @RequestParam String noteId) throws IOException {
+		Response response = noteserviceimpl.deleteNote(token, noteId);
+		return response;
 	}
 
 	@GetMapping("/readnotes")
-	public List<Dtonote> readNote(@RequestParam String token) {
+	public List<Dtonote> readNote(@RequestParam String token) throws IOException {
 		List<Dtonote> notelist = noteserviceimpl.readNotes(token);
 		return notelist;
 	}
 
 	@GetMapping("/archive")
 	public String archive(@RequestParam String noteId, @RequestHeader String token) {
-		String responce = noteserviceimpl.isArchive(token, noteId);
-		return responce;
+		String response = noteserviceimpl.isArchive(token, noteId);
+		return response;
 	}
 
 	@GetMapping("/trash")
 	public String trash(@RequestParam String noteId, @RequestHeader String token) {
-		String responce = noteserviceimpl.isTrash(token, noteId);
-		return responce;
+		String response = noteserviceimpl.isTrash(token, noteId);
+		return response;
 	}
 
 	@GetMapping("/pin")
 	public String pin(@RequestParam String noteId, @RequestHeader String token) {
-		String responce = noteserviceimpl.isPin(token, noteId);
-		return responce;
+		String response = noteserviceimpl.isPin(token, noteId);
+		return response;
 	}
 
 	@PostMapping("/addlabeltonote")
-	public String addlabeltonote(@RequestParam String noteId, @RequestHeader String token,
+	public Response addlabeltonote(@RequestParam String noteId, @RequestHeader String token,
 			@RequestParam String labelId) {
-		String responce = noteserviceimpl.addLabelToNote(noteId, token, labelId);
-		return responce;
+		Response response = noteserviceimpl.addLabelToNote(noteId, token, labelId);
+		return response;
 	}
 
 	@PostMapping("/removelabelfromnote")
-	public String removeLabelFromNote(@RequestParam String noteId, @RequestHeader String token, @RequestParam String labelId) {
-		String responce = noteserviceimpl.removeLabelFromNote(noteId, token, labelId);
-		return responce;
+	public Response removeLabelFromNote(@RequestParam String noteId, @RequestHeader String token, @RequestParam String labelId) {
+		Response response = noteserviceimpl.removeLabelFromNote(noteId, token, labelId);
+		return response;
 	}
 
 }

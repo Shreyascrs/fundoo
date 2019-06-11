@@ -40,10 +40,9 @@ public class ElasticServiceimpl implements IElesticservice {
 
 	@Override
 	public String createNote(Note note) throws IOException {
+
 		@SuppressWarnings("unchecked")
 		Map<String, Object> documentMappper = objectMapper.convertValue(note, Map.class);
-		@SuppressWarnings("deprecation")
-
 		IndexRequest indexRequest = new IndexRequest(INDEX, TYPE, note.getNoteid()).source(documentMappper);
 		IndexResponse indexResponse = client.index(indexRequest, RequestOptions.DEFAULT);
 		return indexResponse.getResult().name();
@@ -67,10 +66,6 @@ public class ElasticServiceimpl implements IElesticservice {
 		request.doc(map);
 		UpdateResponse response = client.update(request, RequestOptions.DEFAULT);
 		return response.getResult().name();
-	}
-
-	{
-
 	}
 
 	@Override
@@ -105,6 +100,7 @@ public class ElasticServiceimpl implements IElesticservice {
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
 		searchSourceBuilder.query(queryBuilder);
 		SearchRequest searchRequest = new SearchRequest();
+
 		searchRequest.source(searchSourceBuilder);
 		SearchResponse response = null;
 
