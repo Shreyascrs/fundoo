@@ -15,6 +15,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.bridgeit.fundoonotes.Response.Response;
+import com.bridgeit.fundoonotes.exception.UserException;
 import com.bridgeit.fundoonotes.exception.UserExceptionHandler;
 
 @Configuration
@@ -38,14 +39,19 @@ public class Appconfigure {
 				RestClient.builder(new HttpHost("localhost", 9200, "http")));
 		return client;
 	}
+
 	@Bean
-	public Response getResponse()
-	{
+	public Response getResponse() {
 		return new Response();
 	}
 
-	public UserExceptionHandler exceptionHandler()
-	{
+@Bean
+	public UserExceptionHandler exceptionHandler() {
 		return new UserExceptionHandler();
 	}
+
+//	@Bean
+//	public UserException userException(String message) {
+//		return new UserException(message);
+//	}
 }

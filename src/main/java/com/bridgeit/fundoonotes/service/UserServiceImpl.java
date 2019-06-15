@@ -82,6 +82,7 @@ public class UserServiceImpl implements IUserService {
 			return response.sendresponse(204, "email not registered", "");
 		}
 		User user = repository.findUserByEmail(dtologin.getEmail()).get();
+		String token=TokenUtility.generateToken(user.getUserId());
 		if (user.getisVerified() == false) {
 			return response.sendresponse(204, "Email not verified verify your email", "");
 		}
@@ -93,7 +94,7 @@ public class UserServiceImpl implements IUserService {
 		user.setUpdatedTime(Utility.todayDate());
 		repository.save(user);
 
-		return response.sendresponse(200, "login successfull", "");
+		return response.sendresponse(200, "login successfull", token);
 	}
 
 	@Override
@@ -110,7 +111,7 @@ public class UserServiceImpl implements IUserService {
 				emailsender.send(email);
 
 			} catch (Exception e) {
-				throw new UserExceptionHandler("internal server error");
+//				throw new UserExceptionHandler("internal server error");
 
 			}
 			return response.sendresponse(205, "Password reset successfull", "");

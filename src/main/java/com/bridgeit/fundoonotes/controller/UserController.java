@@ -29,6 +29,7 @@ public class UserController {
 
 	@GetMapping("/mailactivation/{token}")
 	public Response emailactivation(@PathVariable String token, HttpServletRequest request) {
+		System.out.println("hitting to controller");
 		Response activationMessage = userServiceImpl.validateEmail(token);
 		return activationMessage;
 	}
