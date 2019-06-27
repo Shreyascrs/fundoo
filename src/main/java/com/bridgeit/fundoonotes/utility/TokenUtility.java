@@ -1,34 +1,43 @@
 package com.bridgeit.fundoonotes.utility;
 
+import java.util.Date;
 import org.springframework.stereotype.Component;
-
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.Claim;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.auth0.jwt.interfaces.Verification;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
 public class TokenUtility {
 
-	private static String secretPin = "##9738672744";
+	private String secretPin = "##9738672744";
 
-	public static String generateToken(String id) {
-		Algorithm algorithm = Algorithm.HMAC256(secretPin);
-		String token = JWT.create().withClaim("ID", id).sign(algorithm);
-		return token;
+	public  String generateToken(String id){
+//		Algorithm algorithm = Algorithm.HMAC256(secretPin);
+//		String token = JWT.create().withClaim("ID", id).sign(algorithm);
+		String token = Jwts.builder()
+                .setSubject("fundooNotes")
+                .setExpiration(new Date(System.currentTimeMillis()+86400000))
+                .setId(id)
+                .signWith(SignatureAlgorithm.HS256, secretPin)
+                .compact();
+      return token;
 	}
 	
-	public static String verifyToken(String token)
+	public String verifyToken(String token) 
 	{
-		String id;
-		Verification verification=JWT.require(Algorithm.HMAC256(secretPin));
-		JWTVerifier jwtVerifier=verification.build();
-		DecodedJWT decodedJWT=jwtVerifier.verify(token);
-		Claim claim=decodedJWT.getClaim("ID");
-		id=claim.asString();
-		return id;
+//		String id;
+//		Verification verification=JWT.require(Algorithm.HMAC256(secretPin));
+//		JWTVerifier jwtVerifier=verification.build();
+//		DecodedJWT decodedJWT=jwtVerifier.verify(token);
+//		Claim claim=decodedJWT.getClaim("ID");
+//		id=claim.asString();
+		 Jws<Claims> claims = Jwts.parser()
+		          .setSigningKey(secretPin)
+		          .parseClaimsJws(token);
+		        String userId = claims.getBody().getId();
+		        return userId;
+				
 	}
 
 }

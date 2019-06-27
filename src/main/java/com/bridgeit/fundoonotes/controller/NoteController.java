@@ -1,6 +1,7 @@
 package com.bridgeit.fundoonotes.controller;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bridgeit.fundoonotes.Response.Response;
 import com.bridgeit.fundoonotes.dto.Dtonote;
 import com.bridgeit.fundoonotes.service.Noteserviceimpl;
+
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 
 @RestController
 @RequestMapping("/note")
@@ -49,32 +55,32 @@ public class NoteController {
 	}
 
 	@GetMapping("/archive")
-	public String archive(@RequestParam String noteId, @RequestHeader String token) {
+	public String archive(@RequestParam String noteId, @RequestHeader String token) throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException, UnsupportedEncodingException {
 		String response = noteserviceimpl.isArchive(token, noteId);
 		return response;
 	}
 
 	@GetMapping("/trash")
-	public String trash(@RequestParam String noteId, @RequestHeader String token) {
+	public String trash(@RequestParam String noteId, @RequestHeader String token) throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException, UnsupportedEncodingException {
 		String response = noteserviceimpl.isTrash(token, noteId);
 		return response;
 	}
 
 	@GetMapping("/pin")
-	public String pin(@RequestParam String noteId, @RequestHeader String token) {
+	public String pin(@RequestParam String noteId, @RequestHeader String token) throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException, UnsupportedEncodingException {
 		String response = noteserviceimpl.isPin(token, noteId);
 		return response;
 	}
 
 	@PostMapping("/addlabeltonote")
 	public Response addlabeltonote(@RequestParam String noteId, @RequestHeader String token,
-			@RequestParam String labelId) {
+			@RequestParam String labelId) throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException, UnsupportedEncodingException {
 		Response response = noteserviceimpl.addLabelToNote(noteId, token, labelId);
 		return response;
 	}
 
 	@PostMapping("/removelabelfromnote")
-	public Response removeLabelFromNote(@RequestParam String noteId, @RequestHeader String token, @RequestParam String labelId) {
+	public Response removeLabelFromNote(@RequestParam String noteId, @RequestHeader String token, @RequestParam String labelId) throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException, UnsupportedEncodingException {
 		Response response = noteserviceimpl.removeLabelFromNote(noteId, token, labelId);
 		return response;
 	}

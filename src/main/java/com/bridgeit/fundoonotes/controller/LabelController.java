@@ -1,5 +1,6 @@
 package com.bridgeit.fundoonotes.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,11 @@ import com.bridgeit.fundoonotes.Response.Response;
 import com.bridgeit.fundoonotes.dto.Dtolabel;
 import com.bridgeit.fundoonotes.service.LabelServiceimpl;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
+
 @RestController
 @RequestMapping("/label")
 public class LabelController {
@@ -25,26 +31,26 @@ public class LabelController {
 	private LabelServiceimpl labelServiceimpl;
 
 	@PostMapping("/createlabel")
-	public Response createLabel(@PathVariable String token, @RequestBody Dtolabel dtolabel) {
+	public Response createLabel(@PathVariable String token, @RequestBody Dtolabel dtolabel) throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException, UnsupportedEncodingException {
 		Response response = labelServiceimpl.createLabel(token, dtolabel);
 		return response;
 	}
 
 	@PutMapping("/updatelabel")
 	public Response updateLabel(@PathVariable String token, @RequestBody Dtolabel dtolabel,
-			@RequestParam String labelId) {
+			@RequestParam String labelId) throws  UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException, UnsupportedEncodingException {
 		Response response = labelServiceimpl.updateLabel(dtolabel, labelId, token);
 		return response;
 	}
 
 	@DeleteMapping("/deletelabel")
-	public Response deletelabel(@RequestHeader String token, @RequestParam String labelId) {
+	public Response deletelabel(@RequestHeader String token, @RequestParam String labelId) throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException, UnsupportedEncodingException {
 		Response responce = labelServiceimpl.deleteLabel(token, labelId);
 		return responce;
 	}
 
 	@GetMapping("/readall")
-	public List<Dtolabel> readAll(@PathVariable String token) {
+	public List<Dtolabel> readAll(@PathVariable String token) throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException, UnsupportedEncodingException {
 		List<Dtolabel> label = labelServiceimpl.readAll(token);
 		return label;
 	}

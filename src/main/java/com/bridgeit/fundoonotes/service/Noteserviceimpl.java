@@ -1,6 +1,7 @@
 package com.bridgeit.fundoonotes.service;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,11 @@ import com.bridgeit.fundoonotes.repository.IRepository;
 import com.bridgeit.fundoonotes.utility.TokenUtility;
 import com.bridgeit.fundoonotes.utility.Utility;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
+
 @Service
 public class Noteserviceimpl implements INoteService {
 
@@ -37,7 +43,9 @@ public class Noteserviceimpl implements INoteService {
 	private IElesticservice elasticSearch;
 	@Autowired
 	private Response response;
-
+	@Autowired
+	private TokenUtility TokenUtility;
+	
 	@Override
 	public Response createNote(Dtonote dtonote, String token) {
 		String id = TokenUtility.verifyToken(token);
@@ -52,7 +60,7 @@ public class Noteserviceimpl implements INoteService {
 			try {
 				elasticSearch.createNote(savedNote);
 			} catch (IOException e) {
-				throw new NoteException("something went wrong");
+				throw new NoteException("error in elastic search creation of note");
 			}
 			return response.sendresponse(200, "note created", "");
 
@@ -75,7 +83,7 @@ public class Noteserviceimpl implements INoteService {
 				elasticSearch.updateNote(updatedNote);
 			} catch (IOException e) {
 
-				throw new NoteException("something went wrong");
+				throw new NoteException("error in elastic search updation of note");
 			}
 			return response.sendresponse(200, "note updated", "");
 		} else {
@@ -141,7 +149,7 @@ public class Noteserviceimpl implements INoteService {
 
 	}
 
-	public String isTrash(String token, String noteId) {
+	public String isTrash(String token, String noteId){
 		String userId = TokenUtility.verifyToken(token);
 		Optional<Note> note = iNoteRepository.findByNoteidAndUserid(noteId, userId);
 		if (note.isPresent()) {
@@ -153,7 +161,7 @@ public class Noteserviceimpl implements INoteService {
 		}
 	}
 
-	public String isPin(String token, String noteId) {
+	public String isPin(String token, String noteId){
 		String userId = TokenUtility.verifyToken(token);
 		Optional<Note> note = iNoteRepository.findByNoteidAndUserid(noteId, userId);
 		if (note.isPresent()) {
@@ -168,7 +176,7 @@ public class Noteserviceimpl implements INoteService {
 	}
 
 	@Override
-	public Response addLabelToNote(String noteId, String token, String lableId) {
+	public Response addLabelToNote(String noteId, String token, String lableId){
 		String userId = TokenUtility.verifyToken(token);
 		Optional<User> optuser = repository.findById(userId);
 		Optional<Note> optnote = iNoteRepository.findById(noteId);
@@ -207,7 +215,7 @@ public class Noteserviceimpl implements INoteService {
 		return response.sendresponse(204, "error in adding label to note", "");
 	}
 
-	public Response removeLabelFromNote(String noteId, String token, String labelId) {
+	public Response removeLabelFromNote(String noteId, String token, String labelId){
 		String userId = TokenUtility.verifyToken(token);
 		Optional<Note> optnote = iNoteRepository.findById(noteId);
 		Optional<Label> optlabel = labelrepository.findById(labelId);

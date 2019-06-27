@@ -1,15 +1,15 @@
 package com.bridgeit.fundoonotes.dto;
 
-public class DtoforgetPassword {
+public class DtoresetPassword {
 
 	private String password;
 
-	public DtoforgetPassword() {
+	public DtoresetPassword() {
 
 		// TODO Auto-generated constructor stub
 	}
 
-	public DtoforgetPassword(String password) {
+	public DtoresetPassword(String password) {
 		super();
 		this.password = password;
 	}

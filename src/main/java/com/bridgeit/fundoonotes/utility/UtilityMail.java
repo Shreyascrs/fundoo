@@ -1,5 +1,7 @@
 package com.bridgeit.fundoonotes.utility;
 
+import java.io.UnsupportedEncodingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -13,6 +15,8 @@ public class UtilityMail {
 
 	@Autowired
 	private JavaMailSender javaMailSender;
+	@Autowired
+	private TokenUtility TokenUtility; 
 
 //	@Autowired
 //	public UtilityMail(JavaMailSender javaMailSender) {
@@ -31,7 +35,7 @@ public class UtilityMail {
 		System.out.println("email sent successfull");
 	}
 	
-	public String getlink(String link,String id)
+	public String getlink(String link,String id) throws UnsupportedEncodingException
 	{
 		return link+TokenUtility.generateToken(id);
 	}

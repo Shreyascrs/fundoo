@@ -19,7 +19,6 @@ public class User {
 	private String createdTime;
 	private String updatedTime;
 	private boolean isVerified;
-	@NotNull
 	private String token;
 	private List<Note> notes;
 

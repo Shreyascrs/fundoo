@@ -1,8 +1,6 @@
 package com.bridgeit.fundoonotes.service;
 
-import java.io.IOException;
 import java.util.List;
-
 import com.bridgeit.fundoonotes.Response.Response;
 import com.bridgeit.fundoonotes.dto.Dtonote;
 
