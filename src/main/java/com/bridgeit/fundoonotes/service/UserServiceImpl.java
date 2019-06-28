@@ -6,6 +6,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import com.bridgeit.fundoonotes.Response.*;
 import com.bridgeit.fundoonotes.dto.DtoresetPassword;
 import com.bridgeit.fundoonotes.dto.DtoforgotPassword;
@@ -158,6 +160,18 @@ public class UserServiceImpl implements IUserService {
 			return response.sendresponse(204, "password not changed", "");
 		}
 
+	}
+
+	@Override
+	public boolean isUserPresent(String token) {
+		String userid=tokenUtility.verifyToken(token);
+		Optional<User> isuser=repository.findById(userid);
+		if(isuser.isPresent())
+		{
+		 
+			return true;
+		}
+		return false;
 	}
 
 }

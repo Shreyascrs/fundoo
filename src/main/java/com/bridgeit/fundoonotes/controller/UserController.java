@@ -36,6 +36,13 @@ public class UserController {
 		return status;
 	}
 
+	@GetMapping("/userPresent/{token}")
+	public boolean isuserpresent(@PathVariable String token) {
+		boolean bvalue=userServiceImpl.isUserPresent(token);
+		return bvalue;
+		
+	}
+	
 	@GetMapping("/mailactivation/{token}")
 	public Response emailactivation(@PathVariable String token, HttpServletRequest request)
 			throws ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException,
@@ -44,7 +51,7 @@ public class UserController {
 		Response activationMessage = userServiceImpl.validateEmail(token);
 		return activationMessage;
 	}
-
+	
 	@PostMapping("/login")
 	public Response login(@RequestBody Dtologin dtologin) throws UnsupportedEncodingException {
 		Response response = userServiceImpl.loginUser(dtologin);

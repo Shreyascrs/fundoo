@@ -17,4 +17,6 @@ public interface IUserService {
 	Response forgotPassword(DtoforgotPassword dtologin);
 
 	Response resetPassword(String token, DtoresetPassword dtoforgetPassword);
+	
+	boolean isUserPresent(String token);
 }
