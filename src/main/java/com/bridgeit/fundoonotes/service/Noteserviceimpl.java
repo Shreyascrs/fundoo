@@ -187,7 +187,7 @@ public class Noteserviceimpl implements INoteService {
 			note.setUpdatedTime(Utility.todayDate());
 			List<Label> labels = note.getLabels();
 			if (labels != null) {
-				Optional<Label> oplabel = labels.stream().filter(l -> l.getLabelName().equals(label.getLabelName()))
+				Optional<Label> oplabel = labels.stream().filter(l -> l.getLabelid().equals(label.getLabelid()))
 						.findFirst();
 				if (!oplabel.isPresent()) {
 					labels.add(label);

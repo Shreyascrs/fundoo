@@ -23,7 +23,6 @@ import com.bridgeit.fundoonotes.utility.TokenUtility;
 import com.bridgeit.fundoonotes.utility.Utility;
 import com.bridgeit.fundoonotes.utility.UtilityMail;
 
-
 @Service
 public class UserServiceImpl implements IUserService {
 
@@ -37,45 +36,43 @@ public class UserServiceImpl implements IUserService {
 	private PasswordEncryptUtility passwordEncryptUtility;
 	@Autowired
 	Response response;
-	
+
 	@Autowired
 	TokenUtility tokenUtility;
 
-	public Response registerUser(Dtouser dtouser, HttpServletRequest request){
+	public Response registerUser(Dtouser dtouser, HttpServletRequest request) {
 
 		User user = mapper.map(dtouser, User.class);
-		Boolean isemail=repository.findUserByEmail(dtouser.getEmail()).isPresent();
-		if(isemail)
-		{
-		Email email = new Email();
+		Boolean isemail = repository.findUserByEmail(dtouser.getEmail()).isPresent();
+		if (isemail) {
+			Email email = new Email();
 
-		String token = tokenUtility.generateToken(user.getUserId());
-		user.setPassword(passwordEncryptUtility.encryptPassword(dtouser.getPassword()));
-		user.setToken(token);
-		user.setCreatedTime(Utility.todayDate());
-		user.setUpdatedTime(Utility.todayDate());
-		User saveduser;
-		try {
-			 saveduser = repository.save(user);	
-		} catch (Exception e) {
-			throw new UserException("error while saving in note");
-		}
-		System.err.println(saveduser);
-		email.setEmail(dtouser.getEmail());
-		email.setTo(email.getEmail());
-		email.setSubject("verification");
+			String token = tokenUtility.generateToken(user.getUserId());
+			user.setPassword(passwordEncryptUtility.encryptPassword(dtouser.getPassword()));
+			user.setToken(token);
+			user.setCreatedTime(Utility.todayDate());
+			user.setUpdatedTime(Utility.todayDate());
+			User saveduser;
+			try {
+				saveduser = repository.save(user);
+			} catch (Exception e) {
+				throw new UserException("error while saving in note");
+			}
+			System.err.println(saveduser);
+			email.setEmail(dtouser.getEmail());
+			email.setTo(email.getEmail());
+			email.setSubject("verification");
 
-		try {
+			try {
 
-			email.setBody(emailsender.getlink("http://localhost:9090/user/mailactivation/", saveduser.getUserId()));
-			emailsender.send(email);
-			return response.sendresponse(200, "email sent successfully", "");
-		} catch (Exception e) {
-			throw new UserException("email not sent");
-		}}
-		else
-		{
-		return response.sendresponse(400, "user already exist", "");
+				email.setBody(emailsender.getlink("http://localhost:9090/user/mailactivation/", saveduser.getUserId()));
+				emailsender.send(email);
+				return response.sendresponse(200, "email sent successfully", "");
+			} catch (Exception e) {
+				throw new UserException("email not sent");
+			}
+		} else {
+			return response.sendresponse(400, "user already exist", "");
 		}
 
 	}
@@ -94,7 +91,7 @@ public class UserServiceImpl implements IUserService {
 	}
 
 	@Override
-	public Response loginUser(Dtologin dtologin){
+	public Response loginUser(Dtologin dtologin) {
 
 		boolean isEmailPresent = repository.findUserByEmail(dtologin.getEmail()).isPresent();
 		if (!isEmailPresent) {
@@ -102,7 +99,7 @@ public class UserServiceImpl implements IUserService {
 			return response.sendresponse(204, "email not registered", "");
 		}
 		User user = repository.findUserByEmail(dtologin.getEmail()).get();
-		String token=tokenUtility.generateToken(user.getUserId());
+		String token = tokenUtility.generateToken(user.getUserId());
 		if (user.getisVerified() == false) {
 			return response.sendresponse(204, "Email not verified verify your email", "");
 		}
@@ -128,7 +125,7 @@ public class UserServiceImpl implements IUserService {
 			email.setTo(dtologin.getEmail());
 			email.setSubject("reset password link");
 			try {
-				email.setBody(emailsender.getlink("http://localhost:4200/reset/",use.getUserId()));
+				email.setBody(emailsender.getlink("http://localhost:9090/reset/", use.getUserId()));
 				emailsender.send(email);
 				System.out.println("enterd to email sending block");
 
@@ -136,8 +133,8 @@ public class UserServiceImpl implements IUserService {
 				throw new UserException("internal server error");
 
 			}
-			
-			return response.sendresponse(205, "Password reset successfull", "");
+
+			return response.sendresponse(205, "Password reset link successfull sent", "");
 		} else {
 			System.out.println("user not present");
 			return response.sendresponse(204, "password reset not sent", "");
@@ -145,7 +142,7 @@ public class UserServiceImpl implements IUserService {
 
 	}
 
-	public Response resetPassword(String token, DtoresetPassword dtoforgetPassword){
+	public Response resetPassword(String token, DtoresetPassword dtoforgetPassword) {
 
 		String id = tokenUtility.verifyToken(token);
 		Optional<User> user = repository.findById(id);
@@ -164,11 +161,9 @@ public class UserServiceImpl implements IUserService {
 
 	@Override
 	public boolean isUserPresent(String token) {
-		String userid=tokenUtility.verifyToken(token);
-		Optional<User> isuser=repository.findById(userid);
-		if(isuser.isPresent())
-		{
-		 
+		String userid = tokenUtility.verifyToken(token);
+		Optional<User> isuser = repository.findById(userid);
+		if (isuser.isPresent()) {
 			return true;
 		}
 		return false;

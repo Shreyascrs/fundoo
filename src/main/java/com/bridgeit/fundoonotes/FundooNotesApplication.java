@@ -7,10 +7,10 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 
 @SpringBootApplication
 @EnableAutoConfiguration(exclude=SecurityAutoConfiguration.class)
+
 public class FundooNotesApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(FundooNotesApplication.class, args);
 	}
-
 }

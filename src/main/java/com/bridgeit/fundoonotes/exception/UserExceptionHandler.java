@@ -23,6 +23,11 @@ public class UserExceptionHandler extends RuntimeException {
 		return new ResponseEntity<String>(message, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<String> Exception(String message) {
+		return new ResponseEntity<String>("Something is not right", HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
 	public UserExceptionHandler(String message) {
 		super(message);
 

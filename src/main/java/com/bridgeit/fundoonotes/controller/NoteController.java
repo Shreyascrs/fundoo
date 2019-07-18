@@ -22,6 +22,10 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
 
+@interface validateNote{
+	
+}
+
 @RestController
 @RequestMapping("/note")
 public class NoteController {
