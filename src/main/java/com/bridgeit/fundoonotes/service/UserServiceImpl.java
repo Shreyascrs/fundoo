@@ -125,12 +125,11 @@ public class UserServiceImpl implements IUserService {
 			email.setTo(dtologin.getEmail());
 			email.setSubject("reset password link");
 			try {
-				email.setBody(emailsender.getlink("http://localhost:9090/reset/", use.getUserId()));
+				email.setBody(emailsender.getlink("http://localhost:4200/reset/", use.getUserId()));
 				emailsender.send(email);
-				System.out.println("enterd to email sending block");
 
 			} catch (Exception e) {
-				throw new UserException("internal server error");
+				throw new UserException("error in mail sending");
 
 			}
 
@@ -147,9 +146,7 @@ public class UserServiceImpl implements IUserService {
 		String id = tokenUtility.verifyToken(token);
 		Optional<User> user = repository.findById(id);
 		if (user.isPresent()) {
-			System.err.println(dtoforgetPassword.getPassword());
 			user.get().setPassword(passwordEncryptUtility.encryptPassword(dtoforgetPassword.getPassword()));
-			System.out.println("password changed");
 			user.get().setUpdatedTime(Utility.todayDate());
 			repository.save(user.get());
 			return response.sendresponse(200, "password changed successfull", "");

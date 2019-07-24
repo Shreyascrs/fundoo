@@ -66,7 +66,6 @@ public class UserController {
 
 	@PutMapping("/resetpassword/{token}")
 	public Response resetpassword(@PathVariable String token, @RequestBody DtoresetPassword dtoforgetPassword){
-		System.out.println("hitting to reset controller");
 		Response res = userServiceImpl.resetPassword(token, dtoforgetPassword);
 		return res;
 	}
